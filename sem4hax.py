@@ -31,14 +31,17 @@ def mainMenu():
         print("-------------------------------------------------------")
         print("Courses: ")
         print("1 -- DCS1104")
-        print("2 -- TBA")
+        print("2 -- DCS1106")
         print("X -- Exit Program\n")
         option = input("Please enter an option: ")
 
         if(option == "1"):
             editBreadcrumbs("course", "DCS1104")
             DCS1104Menu()
-        elif(option == "X"):
+        elif(option == "2"):
+            editBreadcrumbs("course", "DCS1106")
+            DCS1106Menu()
+        elif(option.lower() == "x"):
             os.system("cls")
             break
 
@@ -91,7 +94,7 @@ def DCS1104Menu():
         elif(option == "2"):
             editBreadcrumbs("subtopic", "Distance Measures")
             distanceMeasuresMenu()
-        elif(option == "X"):
+        elif(option.lower() == "x"):
             break
 
 # BELOW ARE FUNCTIONS FOR MENU FOR UNIVARIATE ABSOLUTE AND RELATIVE FREQUENCY (SUBMENU UNDER DCS1104)
@@ -116,7 +119,7 @@ def descriptiveStatisticsMenu():
         elif(option == "2"):
             editBreadcrumbs("hax", "Location Univariate Statistics")
             locationUniStats()
-        elif(option == "X"):
+        elif(option.lower() == "x"):
             break
 
 # BELOW ARE FUNCTIONS FOR UNIVARIATE FREQUENCY
@@ -300,7 +303,7 @@ def distanceMeasuresMenu():
         elif(option == "4"):
             editBreadcrumbs("hax", "Edit Distance")
             editDistance()
-        elif(option == "X"):
+        elif(option.lower() == "x"):
             break
 
 # BELOW ARE FUNCTIONS FOR PIXEL IMAGE DISTANCE CALCULATION
@@ -515,5 +518,329 @@ def editDistance():
                     continue
                 else:
                     break
+
+def DCS1106Menu():
+    while(True):
+        os.system("cls")
+        print("Welcome to Jesussy Hax Your Homework~")
+        displayBreadcrumbs()
+        print("-------------------------------------------------------")
+        print("Subtopic: ")
+        print("1 -- Scheduling Algorithms:")
+        print("\t > Includes First Come First Serve, Shortest Job First (Preemptive/Non-Preemptive) etc.\n")
+        print("X -- Back to previous menu\n")
+        option = input("Please enter an option: ")
+
+        if(option == "1"):
+            editBreadcrumbs("subtopic", "Scheduling Algorithms")
+            schedulingAlgorithmsMenu()
+        elif(option == "2"):
+            editBreadcrumbs("subtopic", "Distance Measures")
+            distanceMeasuresMenu()
+        elif(option.lower() == "x"):
+            break
+
+def schedulingAlgorithmsMenu():
+    while(True):
+        os.system("cls")
+        print("Welcome to Jesussy Hax Your Homework~")
+        displayBreadcrumbs()
+        print("-------------------------------------------------------")
+        print("Hax: ")
+        print("1 -- First Come First Serve (FCFS)")
+        print("\t > Schedules processes to be executed in order of arrival\n")
+        print("2 -- Shortest Job First (Non-Preemptive)")
+        print("\t > Schedules processes to be executed in order of burst time after arrival but does not stop until completed\n")
+        print("3 -- Shortest Job First (Preemptive)")
+        print("\t > Schedules processes to be executed in order of burst time after arrival but reschedules upon new process arriving\n")
+        option = input("Please enter an option: ")
+        
+        if(option == "1"):
+            editBreadcrumbs("hax", "First Come First Serve (FCFS)")
+            fcfs()
+        elif(option == "2"):
+            editBreadcrumbs("hax", "Shortest Job First (Non-Preemptive)")
+            sjfNonPreemptive()
+        elif(option == "3"):
+            editBreadcrumbs("hax", "Shortest Job First (Preemptive)")
+            sjfPreemptive() 
+        elif(option.lower() == "x"):
+            break
+
+def fcfs():
+    while(True):
+        os.system("cls")
+        print("Welcome to Jesussy Hax Your Homework~")
+        displayBreadcrumbs()
+        print("-------------------------------------------------------")
+        procCount = 0
+        procData = []
+        schedule = []
+
+        procCount = int(input("Please enter number of processes: "))
+
+
+        for a in range (0, procCount):
+            print("Enter P" + str(a+1) + " Data: ")
+            tempAT = int(input("Arrival Time: "))
+            tempBT = int(input("Burst Time: "))
+            tempArr = [tempAT, tempBT, 0, 0, 0, "P" + str(a+1)]
+            procData.append(tempArr)
+            print("\n")
+
+        procDataSorted = sorted(procData, key = lambda row: (row[0], row[1]))
+
+        for b in range (0, procCount):
+            while(procDataSorted[b][0] > len(schedule)):
+                schedule.append("Idle")
+
+            for c in range (0, procDataSorted[b][1]):
+                schedule.append(procDataSorted[b][5])
+
+        temp = "temp"
+        timeline = "0"
+        gantt = "|"
+        formatStr = "{:^8} {:^1}"
+
+        for d in range (0, len(schedule)):
+            if(schedule[d] != temp):
+                timeline += formatStr.format("", str(d+1))
+                gantt += formatStr.format(schedule[d], "|")
+                temp = schedule[d]
+
+        print("Gantt Chart:\n")
+        print(timeline)
+        printString(len(gantt), "-")
+        print(gantt)
+        printString(len(gantt), "-")
+
+        if(promptContinue()):
+            continue
+        else:
+            break
+
+def sjfNonPreemptive():
+    while(True):
+        os.system("cls")
+        print("Welcome to Jesussy Hax Your Homework~")
+        displayBreadcrumbs()
+        print("-------------------------------------------------------")
+        procCount = 0
+        procData = []
+        schedule = []
+
+        procCount = int(input("Please enter number of processes: "))
+
+
+        for a in range (0, procCount):
+            print("Enter P" + str(a+1) + " Data: ")
+            tempAT = int(input("Arrival Time: "))
+            tempBT = int(input("Burst Time: "))
+            tempArr = ["P" + str(a+1), tempAT, tempBT, 0, 0, 0]
+            procData.append(tempArr)
+            print("\n")
+
+        procDataSorted = sorted(procData, key = lambda row: (row[1], row[2]))
+
+        for b in range (0, procCount):
+            while(procDataSorted[b][1] > len(schedule)):
+                schedule.append("Idle")
+
+            for c in range (0, procDataSorted[b][2]):
+                schedule.append(procDataSorted[b][0])
+
+        temp = "temp"
+        timeline = "0"
+        timeStop = 0
+        gantt = "|"
+        formatStr = "{:^8}{:^1}"
+
+        def printString(size, char):
+            output = ""
+            for a in range (0, size):
+                output += str(char)
+            print(output)
+
+        for d in range (0, len(schedule)):
+            if(schedule[d] != temp):
+                timeline += formatStr.format("", str(max(index for index, proc in enumerate(schedule) if proc == schedule[d]) + 1))
+                gantt += formatStr.format(schedule[d], "|")
+                temp = schedule[d]
+
+        formatStr = "| {:^8} | {:^15} | {:^15} | {:^15} | {:^15} | {:^15} |"
+        string = formatStr.format("Process", "Arrival Time", "Burst Time", "Completion Time", "Turnaround Time", "Waiting Time")
+        printString(len(string), "-")
+        print(string)
+
+        for e in range (0, procCount):
+            procData[e][3] = max(index for index, proc in enumerate(schedule) if proc == procData[e][0]) + 1
+            procData[e][4] = procData[e][3] - procData[e][1]
+            procData[e][5] = procData[e][4] - procData[e][2]
+            string = formatStr.format(procData[e][0], procData[e][1], procData[e][2], procData[e][3], procData[e][4], procData[e][5])
+            printString(len(string), "-")
+            print(string)
+
+        printString(len(string), "-")
+
+        avgtt = "Average Turnaround Time: "
+        totaltt = 0
+        avgwt = "Average Waiting Time: "
+        totalwt = 0
+        for m in range (0, procCount):
+            if(m == procCount-1):
+                avgtt += (str(procData[m][4]) + " = ")
+                avgwt += (str(procData[m][5]) + " = ")
+            else:
+                avgtt += (str(procData[m][4]) + " + ")
+                avgwt += (str(procData[m][5]) + " + ")
+            totaltt += procData[m][4]
+            totalwt += procData[m][5]
+
+        print("\n" + avgtt + str(totaltt/procCount) + "ms")
+        print("\n" + avgwt + str(totalwt/procCount) + "ms")
+
+        print("\nGantt Chart:\n")
+        print(timeline)
+        printString(len(gantt), "-")
+        print(gantt)
+        printString(len(gantt), "-")
+
+        if(promptContinue()):
+            continue
+        else:
+            break
+
+def sjfPreemptive():
+    while(True):
+        os.system("cls")
+        print("Welcome to Jesussy Hax Your Homework~")
+        displayBreadcrumbs()
+        print("-------------------------------------------------------")
+        procCount = 0
+        index = 0
+        sumBT = 0
+
+        procData = []
+        schedule = []
+        burstTime = {}
+
+        end = False
+
+        procCount = int(input("Please enter number of processes: "))
+
+        for a in range (0, procCount):
+            process = "P" + str(a+1)
+            print("Enter " + process + " Data: ")
+            tempAT = int(input("Arrival Time: "))
+            tempBT = int(input("Burst Time: "))
+            tempArr = [process, tempAT, tempBT, 0, 0, 0]
+            procData.append(tempArr)
+            burstTime[process] = tempBT
+            sumBT += tempBT
+            print("\n")
+
+        procDataSorted = sorted(procData, key = lambda row: (row[1], row[2]))
+        currJob = procDataSorted[0][0]
+
+        while(end == False):
+            if(sum(burstTime.values()) == sumBT):
+                while(procDataSorted[0][1] > len(schedule)):
+                    schedule.append("Idle")
+                    index += 1
+
+            elimList = []
+
+            for a in range (0, procCount):
+                if(procDataSorted[a][1] <= index and burstTime[procDataSorted[a][0]] > 0):
+                    elimList.append([procDataSorted[a][0], procDataSorted[a][1], burstTime[procDataSorted[a][0]]])
+
+            elimList.sort(key = lambda x: x[2])
+
+            if(sum(burstTime.values()) != 0):
+                if(len(elimList) == 0):
+                    schedule.append("Idle")
+                    index += 1
+                    break
+                else:
+                    if(burstTime[currJob] < 1):
+                        currJob = elimList[0][0]
+
+                    for c in range (0, len(elimList)):
+                        if(burstTime[elimList[0][0]] < burstTime[currJob]):
+                            currJob = elimList[c][0]
+
+                    for d in range (0, procCount):
+                        if(procDataSorted[d][0] == currJob):
+                            schedule.append(currJob)
+                            burstTime[currJob] -= 1
+                            index += 1
+                            break
+            else:
+                end = True
+                break
+
+        formatStr = "{:>4}{:>3}"
+        timeline = "0"
+        gantt = "|"
+
+        for d in range (0, len(schedule)):
+            timeline += formatStr.format("", d+1)
+            gantt += formatStr.format(schedule[d], "|")
+
+        print("Table of Results: ")
+        formatStr = "| {:^8} | {:^15} | {:^15} | {:^15} | {:^15} | {:^15} |"
+        string = formatStr.format("Process", "Arrival Time", "Burst Time", "Completion Time", "Turnaround Time", "Waiting Time")
+        printString(len(string), "-")
+        print(string)
+
+        for e in range (0, procCount):
+            procData[e][3] = max(index for index, proc in enumerate(schedule) if proc == procData[e][0]) + 1
+            procData[e][4] = procData[e][3] - procData[e][1]
+            procData[e][5] = procData[e][4] - procData[e][2]
+            string = formatStr.format(procData[e][0], procData[e][1], procData[e][2], procData[e][3], procData[e][4], procData[e][5])
+            printString(len(string), "-")
+            print(string)
+
+        printString(len(string), "-")
+
+        avgtt = "Average Turnaround Time: ("
+        totaltt = 0
+        avgwt = "Average Waiting Time: ("
+        totalwt = 0
+        for m in range (0, procCount):
+            if(m == procCount-1):
+                avgtt += (str(procData[m][4]) + ")/" + str(procCount) + " = ")
+                avgwt += (str(procData[m][5]) + ")/" + str(procCount) + " = ")
+            else:
+                avgtt += (str(procData[m][4]) + " + ")
+                avgwt += (str(procData[m][5]) + " + ")
+            totaltt += procData[m][4]
+            totalwt += procData[m][5]
+
+        print("\n" + avgtt + str(totaltt/procCount) + "ms")
+        print(avgwt + str(totalwt/procCount) + "ms")
+
+        print("\nGantt Chart:\n")
+        print(timeline)
+        printString(len(gantt), "-")
+        print(gantt)
+        printString(len(gantt), "-")
+
+        formatStr = "{:^6}{:^1}"
+        for x in range (0, procCount):
+            remainder = " "
+            for y in range (0, len(schedule)):
+                tempArr = schedule[0:y]
+                r = procData[x][2] - tempArr.count(procData[x][0])
+                if(procData[x][1] <= y and r > 0):
+                    remainder += formatStr.format("P" + str(x+1) + "-" + str(procData[x][2] - tempArr.count(procData[x][0])), "")
+                else:
+                    remainder += formatStr.format(" ", " ")
+            print(remainder)
+
+        if(promptContinue()):
+            continue
+        else:
+            break
 
 start()
