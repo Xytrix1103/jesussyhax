@@ -519,6 +519,8 @@ def editDistance():
                 else:
                     break
 
+# BELOW ARE FUNCTIONS FOR MENU FOR DCS1106 (OPERATING SYSTEMS)
+
 def DCS1106Menu():
     while(True):
         os.system("cls")
@@ -539,6 +541,8 @@ def DCS1106Menu():
             distanceMeasuresMenu()
         elif(option.lower() == "x"):
             break
+
+# BELOW ARE FUNCTIONS FOR MENU FOR SCHEDULING ALGORITHMS
 
 def schedulingAlgorithmsMenu():
     while(True):
@@ -566,6 +570,8 @@ def schedulingAlgorithmsMenu():
             sjfPreemptive() 
         elif(option.lower() == "x"):
             break
+
+# BELOW ARE FUNCTIONS FOR FIRST COME FIRST SERVE SCHEDULING ALGORITHM
 
 def fcfs():
     while(True):
@@ -618,6 +624,8 @@ def fcfs():
             continue
         else:
             break
+
+# BELOW ARE FUNCTIONS FOR SHORTEST JOB FIRST, NON-PREEMPTIVE
 
 def sjfNonPreemptive():
     while(True):
@@ -709,6 +717,8 @@ def sjfNonPreemptive():
             continue
         else:
             break
+
+# BELOW ARE FUNCTIONS FOR SHORTEST JOB FIRST, PREEMPTIVE
 
 def sjfPreemptive():
     while(True):
