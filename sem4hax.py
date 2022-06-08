@@ -1,3 +1,4 @@
+from asyncore import read
 import os
 course = None
 subtopic = None
@@ -557,6 +558,9 @@ def schedulingAlgorithmsMenu():
         print("\t > Schedules processes to be executed in order of burst time after arrival but does not stop until completed\n")
         print("3 -- Shortest Job First (Preemptive)")
         print("\t > Schedules processes to be executed in order of burst time after arrival but reschedules upon new process arriving\n")
+        print("4 -- Round Robin")
+        print("\t > Schedules processes in a cyclical way with a certain time limit (time quantum)")
+        print("X -- Back to previous menu\n")
         option = input("Please enter an option: ")
         
         if(option == "1"):
@@ -568,6 +572,9 @@ def schedulingAlgorithmsMenu():
         elif(option == "3"):
             editBreadcrumbs("hax", "Shortest Job First (Preemptive)")
             sjfPreemptive() 
+        elif(option == "4"):
+            editBreadcrumbs("hax", "Round Robin")
+            roundRobin() 
         elif(option.lower() == "x"):
             break
 
@@ -788,6 +795,137 @@ def sjfPreemptive():
             else:
                 end = True
                 break
+
+        formatStr = "{:>4}{:>3}"
+        timeline = "0"
+        gantt = "|"
+
+        for d in range (0, len(schedule)):
+            timeline += formatStr.format("", d+1)
+            gantt += formatStr.format(schedule[d], "|")
+
+        print("Table of Results: ")
+        formatStr = "| {:^8} | {:^15} | {:^15} | {:^15} | {:^15} | {:^15} |"
+        string = formatStr.format("Process", "Arrival Time", "Burst Time", "Completion Time", "Turnaround Time", "Waiting Time")
+        printString(len(string), "-")
+        print(string)
+
+        for e in range (0, procCount):
+            procData[e][3] = max(index for index, proc in enumerate(schedule) if proc == procData[e][0]) + 1
+            procData[e][4] = procData[e][3] - procData[e][1]
+            procData[e][5] = procData[e][4] - procData[e][2]
+            string = formatStr.format(procData[e][0], procData[e][1], procData[e][2], procData[e][3], procData[e][4], procData[e][5])
+            printString(len(string), "-")
+            print(string)
+
+        printString(len(string), "-")
+
+        avgtt = "Average Turnaround Time: ("
+        totaltt = 0
+        avgwt = "Average Waiting Time: ("
+        totalwt = 0
+        for m in range (0, procCount):
+            if(m == procCount-1):
+                avgtt += (str(procData[m][4]) + ")/" + str(procCount) + " = ")
+                avgwt += (str(procData[m][5]) + ")/" + str(procCount) + " = ")
+            else:
+                avgtt += (str(procData[m][4]) + " + ")
+                avgwt += (str(procData[m][5]) + " + ")
+            totaltt += procData[m][4]
+            totalwt += procData[m][5]
+
+        print("\n" + avgtt + str(totaltt/procCount) + "ms")
+        print(avgwt + str(totalwt/procCount) + "ms")
+
+        print("\nGantt Chart:\n")
+        print(timeline)
+        printString(len(gantt), "-")
+        print(gantt)
+        printString(len(gantt), "-")
+
+        formatStr = "{:^6}{:^1}"
+        for x in range (0, procCount):
+            remainder = " "
+            for y in range (0, len(schedule)):
+                tempArr = schedule[0:y]
+                r = procData[x][2] - tempArr.count(procData[x][0])
+                if(procData[x][1] <= y and r > 0):
+                    remainder += formatStr.format("P" + str(x+1) + "-" + str(procData[x][2] - tempArr.count(procData[x][0])), "")
+                else:
+                    remainder += formatStr.format(" ", " ")
+            print(remainder)
+
+        if(promptContinue()):
+            continue
+        else:
+            break
+
+
+def roundRobin():
+    while (True):
+        os.system("cls")
+        print("Welcome to Jesussy Hax Your Homework~")
+        displayBreadcrumbs()
+        print("-------------------------------------------------------")
+        procCount = 0
+        sumBT = 0
+        timeQuantum = 0
+        currProc = ""
+
+        procData = []
+        schedule = []
+        readyQ = []
+        burstTime = {}
+
+        end = False
+
+        procCount = int(input("Please enter number of processes: "))
+        timeQuantum = int(input("Please enter time quantum: "))
+
+        for x in range(0, procCount):
+            process = "P" + str(x + 1)
+            print("Enter " + process + " Data: ")
+            tempAT = int(input("Arrival Time: "))
+            tempBT = int(input("Burst Time: "))
+            tempArr = [process, tempAT, tempBT, 0, 0, 0]
+            procData.append(tempArr)
+            burstTime[process] = tempBT
+            sumBT += tempBT
+            print("\n")
+
+        procDataSorted = sorted(procData, key=lambda row: (row[1], row[0]))
+
+        currProc = procDataSorted[0][0]
+
+        while(end == False):
+            for a in range(0, procCount):
+                if (procDataSorted[a][1] <= len(schedule) and burstTime[procDataSorted[a][0]] > 0 and procDataSorted[a][0] not in readyQ):
+                    readyQ.append(procDataSorted[a][0])
+
+            if(sum(burstTime.values()) != 0):
+                if(len(readyQ) > 0):
+                    currProc = readyQ[0]
+                    
+                    for b in range(0, timeQuantum):
+                        if(burstTime[currProc] > 0):
+                            schedule.append(currProc)
+                            burstTime[currProc] -= 1
+                        else:
+                            break
+                    
+                    readyQ.pop(0)
+
+                    for c in range(0, procCount):
+                        if (procDataSorted[c][1] <= len(schedule) and burstTime[procDataSorted[c][0]] > 0 and procDataSorted[c][0] not in readyQ and procDataSorted[c][0] != currProc):
+                            readyQ.append(procDataSorted[c][0])
+
+                    if(burstTime[currProc] > 0):
+                        readyQ.append(currProc)
+
+                else:
+                    schedule.append("Idle")
+            else:
+                end = True
 
         formatStr = "{:>4}{:>3}"
         timeline = "0"
