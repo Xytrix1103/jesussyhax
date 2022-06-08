@@ -559,7 +559,7 @@ def schedulingAlgorithmsMenu():
         print("3 -- Shortest Job First (Preemptive)")
         print("\t > Schedules processes to be executed in order of burst time after arrival but reschedules upon new process arriving\n")
         print("4 -- Round Robin")
-        print("\t > Schedules processes in a cyclical way with a certain time limit (time quantum)")
+        print("\t > Schedules processes in a cyclical way with a certain time limit (time quantum)\n")
         print("X -- Back to previous menu\n")
         option = input("Please enter an option: ")
         
