@@ -1,4 +1,3 @@
-from asyncore import read
 import os
 course = None
 subtopic = None
